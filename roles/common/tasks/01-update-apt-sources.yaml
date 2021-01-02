@@ -1,0 +1,23 @@
+- name: Remove enterprise proxmox repository to get apt-get update to work without errors
+  copy:
+    src: pve-enterprise.list
+    dest: /etc/apt/sources.list.d/pve-enterprise.list
+    owner: root
+    group: root
+    mode: 0644
+- name: Add main respository into sources list
+  apt_repository:
+    repo: deb http://ftp.sg.debian.org/debian/ buster main contrib non-free
+    state: present
+    filename: debian
+- name: Add updates respository into sources list
+  apt_repository:
+    repo: deb http://ftp.sg.debian.org/debian/ buster-updates main contrib non-free
+    state: present
+    filename: debian
+- name: Add security respository into sources list
+  apt_repository:
+    repo: deb http://security.debian.org/ buster/updates main contrib non-free
+    state: present
+    filename: debian
+    
