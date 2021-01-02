@@ -1,3 +1,4 @@
 ---
 - include_tasks: 01-update-apt-sources.yaml
 - include_tasks: 02-update-apt-packages.yaml
+- include_tasks: 03-remove-subscription-message.yaml
