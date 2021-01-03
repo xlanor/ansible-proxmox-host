@@ -3,3 +3,4 @@
 - include_tasks: 02-update-apt-packages.yaml
 - include_tasks: 03-remove-subscription-message.yaml
 - include_tasks: 04-packer-bootstrap.yaml
+- include_tasks: 05-create-alpine-template.yaml

@@ -9,4 +9,5 @@
     - vim
     - python3-pip
     - unzip
+    - git
     state: present

@@ -1,0 +1,13 @@
+---
+# handlers file for ansible-proxmox
+
+- name: restart networking
+  service:
+    name: networking
+    state: restarted
+  ignore_errors: True
+
+- name: restart isc-dhcp-server
+  service:
+    name: isc-dhcp-server
+    state: restarted
