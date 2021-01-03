@@ -1,0 +1,3 @@
+---
+packer_version: 1.6.6
+packer_download_directory: /tmp/packer

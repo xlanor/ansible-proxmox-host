@@ -3,7 +3,10 @@
     update_cache: yes
     upgrade: 'yes'
     cache_valid_time: 86400 
-- name: Install vim
+- name: Install vim and pip
   apt:
-    pkg:
+    name:
     - vim
+    - python3-pip
+    - unzip
+    state: present

@@ -1,0 +1,51 @@
+- name: Get python base path
+  shell:  echo -n $(python3 -m site --user-base)
+  args:
+    executable: /bin/bash
+  register: basepath
+
+- name: Check if pip3 path is already defined
+  lineinfile:
+    state: absent
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    regexp: "^export PATH="
+  check_mode: true
+  changed_when: false # This just makes things look prettier in the logs
+  register: check
+
+- name: Insert pip3 path if not exist.
+  lineinfile:
+    state: present
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: "export PATH=$PATH:{{ basepath.stdout }}/bin:"
+    insertbefore: EOF
+  when: check.found == 0
+
+- name: Install ansible
+  pip:
+    name: ansible
+    extra_args: --user
+
+- name: Install j2cli
+  pip:
+    name: j2cli[yaml]
+    extra_args: --user
+
+- name: Install py-bcrypt
+  pip:
+    name: py-bcrypt
+    extra_args: --user
+
+- name: Check whether packer has been installed and is on system path
+  command: 'which packer' 
+  register: packer_installed
+  ignore_errors: yes
+
+- name: Unarchive Packer
+  unarchive:
+    src: https://releases.hashicorp.com/packer/{{packer_version}}/packer_{{packer_version}}_linux_amd64.zip
+    dest: /usr/local/bin
+    remote_src: yes
+  when: packer_installed.rc != 0
+
+

@@ -1,2 +1,5 @@
 [proxmox]
 192.168.2.2
+
+[proxmox:vars]
+ansible_python_interpreter=/usr/bin/python3
