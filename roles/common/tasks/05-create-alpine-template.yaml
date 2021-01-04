@@ -10,7 +10,7 @@
 # github uses many redirects .
 - name: Download packer template from github
   get_url: 
-    url: https://github.com/chriswayg/packer-proxmox-templates/archive/{{packer_template_version}}.zip
+    url: https://github.com/xlanor/proxmox-template-packer/archive/{{packer_template_version}}.zip
     dest: /tmp/packer-template/temp_{{packer_template_version}}.zip
 
 - name: Unarchive alpine packer template
@@ -19,35 +19,6 @@
     dest: /tmp/packer-template
     remote_src: yes
 
-- name: Update packer template's answers to change the distro repos
-  copy:
-    src: answers
-    dest: /tmp/packer-template/packer-proxmox-templates-{{packer_template_version}}/{{alpine_template_dir}}/http/answers
-    owner: root
-    group: root
-    mode: 0644
-
-- name: Update packer template's build.conf
-  copy:
-    src: build.conf
-    dest: /tmp/packer-template/packer-proxmox-templates-{{packer_template_version}}/{{alpine_template_dir}}/build.conf
-    owner: root
-    group: root
-    mode: 0644
-
-- name: Update packer template's server-template-vars
-  copy:
-    src: server-template-vars.yml
-    dest: /tmp/packer-template/packer-proxmox-templates-{{packer_template_version}}/{{alpine_template_dir}}/playbook/server-template-vars.yml
-    owner: root
-    group: root
-    mode: 0644
-
-- name: Replace vmbr1 with vmbr0.
-  replace:
-    path: /tmp/packer-template/packer-proxmox-templates-{{packer_template_version}}/{{alpine_template_dir}}/alpine-3-amd64-proxmox.json
-    regexp: 'vmbr1'
-    replace: 'vmbr0'
 
 - name: Execute ansible packer script.
   shell: ../build.sh proxmox
@@ -56,4 +27,4 @@
     ssh_password: "{{ vm_ssh_password }}"
   args:
     executable: /bin/bash
-    chdir: /tmp/packer-template/packer-proxmox-templates-{{packer_template_version}}/{{alpine_template_dir}}
+    chdir: /tmp/packer-template/proxmox-template-packer-{{packer_template_version}}/{{alpine_template_dir}}
