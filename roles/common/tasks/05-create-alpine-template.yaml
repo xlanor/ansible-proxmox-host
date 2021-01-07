@@ -1,30 +1,45 @@
-# NOTE: this step needs to find a way to be idempotent using the proxmox cli.
-# If a template already exists it should not create it.
-
-- name: Create a temporary location to store the packer template
-  file:
-    state: directory
-    path: /tmp/packer-template
-
-# Dont use unarchive's remote src because it doesnt support redirects.
-# github uses many redirects .
-- name: Download packer template from github
-  get_url: 
-    url: https://github.com/xlanor/proxmox-template-packer/archive/{{packer_template_version}}.zip
-    dest: /tmp/packer-template/temp_{{packer_template_version}}.zip
-
-- name: Unarchive alpine packer template
-  unarchive:
-    src: /tmp/packer-template/temp_{{packer_template_version}}.zip
-    dest: /tmp/packer-template
-    remote_src: yes
 
 
-- name: Execute ansible packer script.
-  shell: ../build.sh proxmox
-  environment:
-    proxmox_password: "{{ proxmox_password }}"
-    ssh_password: "{{ vm_ssh_password }}"
-  args:
-    executable: /bin/bash
-    chdir: /tmp/packer-template/proxmox-template-packer-{{packer_template_version}}/{{alpine_template_dir}}
+- name: Check whether template already exists.
+  shell: "qm list | grep {{ default_vm_id }}"
+  register: check_result
+  ignore_errors: yes
+
+- name: Create template
+  block:
+  - name: Create a temporary location to store the packer template
+    file:
+      state: directory
+      path: /tmp/packer-template
+
+  # Dont use unarchive's remote src because it doesnt support redirects.
+  # github uses many redirects .
+  - name: Download packer template from github
+    get_url: 
+      url: https://github.com/xlanor/proxmox-template-packer/archive/{{packer_template_version}}.zip
+      dest: /tmp/packer-template/temp_{{packer_template_version}}.zip
+
+  - name: Unarchive alpine packer template
+    unarchive:
+      src: /tmp/packer-template/temp_{{packer_template_version}}.zip
+      dest: /tmp/packer-template
+      remote_src: yes
+
+
+  - name: Execute ansible packer script.
+    shell: ../build.sh proxmox
+    environment:
+      proxmox_password: "{{ proxmox_password }}"
+      ssh_password: "{{ vm_ssh_password }}"
+    args:
+      executable: /bin/bash
+      chdir: /tmp/packer-template/proxmox-template-packer-{{packer_template_version}}/{{alpine_template_dir}}
+
+  - name: Clean artifacts
+    file:
+      state: absent
+      path: /tmp/packer-template
+
+  when: check_result.rc != 0
+
+
