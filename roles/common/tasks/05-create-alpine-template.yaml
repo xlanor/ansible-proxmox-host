@@ -5,6 +5,7 @@
   register: check_result
   ignore_errors: yes
 
+
 - name: Create template
   block:
   - name: Create a temporary location to store the packer template
@@ -31,6 +32,8 @@
     environment:
       proxmox_password: "{{ proxmox_password }}"
       ssh_password: "{{ vm_ssh_password }}"
+      proxmox_url: "https://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:8006/api2/json"
+      proxmox_host: "{{ ansible_hostname }}"
     args:
       executable: /bin/bash
       chdir: /tmp/packer-template/proxmox-template-packer-{{packer_template_version}}/{{alpine_template_dir}}

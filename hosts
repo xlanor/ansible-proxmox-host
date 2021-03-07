@@ -1,5 +1,6 @@
 [proxmox]
-192.168.2.2
+192.168.2.2 hostname=host1
+192.168.2.3 hostname=host2
 
 [proxmox:vars]
 ansible_python_interpreter=/usr/bin/python3

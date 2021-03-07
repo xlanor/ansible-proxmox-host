@@ -1,8 +1,8 @@
 vm_default_user=root
 vm_memory=1024
 default_vm_id=1286
-proxmox_url=https://192.168.2.2:8006/api2/json
-proxmox_host=host1
+proxmox_url=https://PROMOX_URL:8006/api2/json
+proxmox_host=PROXMOX_HOST
 
 iso_url=https://dl-cdn.alpinelinux.org/alpine/v3.12/releases/x86_64/alpine-virt-3.12.3-x86_64.iso
 iso_sha256_url=https://dl-cdn.alpinelinux.org/alpine/v3.12/releases/x86_64/alpine-virt-3.12.3-x86_64.iso.sha256
